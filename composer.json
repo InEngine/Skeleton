@@ -1,13 +1,13 @@
 {
-    "name": "inengine/module-skeleton",
+    "name": ":vendor_slug/:package_slug",
     "description": ":package_description",
     "keywords": [
-        "InEngine",
+        ":vendor_name",
         "laravel",
         "modulus",
         ":package_slug"
     ],
-    "homepage": "https://github.com/InEngine/module-skeleton",
+    "homepage": "https://github.com/:vendor_slug/:package_slug",
     "license": "MIT",
     "authors": [
         {

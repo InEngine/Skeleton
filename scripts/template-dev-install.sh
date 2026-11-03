@@ -5,10 +5,13 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 fixture_name="${TEMPLATE_DEV_NAME:-inengine/skeleton-dev}"
+backup="$(mktemp)"
+cp composer.json "$backup"
+restore() { cp "$backup" composer.json; rm -f "$backup"; }
+trap restore EXIT
 
 if grep -q '":vendor_slug/:package_slug"' composer.json; then
   perl -pi -e "s#\":vendor_slug/:package_slug\"#\"${fixture_name}\"#g" composer.json
-  trap 'git checkout -- composer.json' EXIT
 fi
 
 composer update --prefer-dist --no-interaction "$@"
