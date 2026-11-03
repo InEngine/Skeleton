@@ -17,7 +17,7 @@ class ModuleCapabilityDescriptor
      */
     public static function packageName(): string
     {
-        return 'inengine/module-skeleton';
+        return ':vendor_slug/:package_slug';
     }
 
     /**

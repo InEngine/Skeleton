@@ -7,7 +7,7 @@ it('exposes a static capability payload for inspect tooling', function () {
 
     expect($payload)
         ->toHaveKeys(['package', 'provides', 'requires', 'events', 'peers'])
-        ->and($payload['package'])->toBe('inengine/module-skeleton')
+        ->and($payload['package'])->toBe(':vendor_slug/:package_slug')
         ->and($payload['provides'])->toBeArray()
         ->and($payload['requires'])->toBeArray()
         ->and($payload['events'])->toBeArray()

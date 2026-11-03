@@ -12,5 +12,5 @@ it('declares the composer package name for Modulus registration', function () {
     $provider = app()->getProvider(SkeletonServiceProvider::class);
     $method = new ReflectionMethod($provider, 'modulusPackageName');
 
-    expect($method->invoke($provider))->toBe('inengine/module-skeleton');
+    expect($method->invoke($provider))->toBe(':vendor_slug/:package_slug');
 });

@@ -9,6 +9,8 @@
 
 **InEngine / Modulus feature-module template** (forked from Spatie `package-skeleton-laravel`).
 
+This repository is a **GitHub template only** — same model as Spatie’s package skeleton. It is **not** published to Packagist and must **not** be `composer require`’d. Create modules with **Use this template**, then run `configure.php`.
+
 1. Click **Use this template** (or clone into `InEngine/Modules/{Feature}`).
 2. Read **[TEMPLATE.md](TEMPLATE.md)** for author rules and monorepo layout.
 3. Run configure:
@@ -22,7 +24,7 @@ php ./configure.php -n \
   --no-ray
 ```
 
-`php ./configure.php --help` lists all options.
+`php ./configure.php --help` lists all options. After configure, the **new** feature package may be published to Packagist as `inengine/{feature}` — never this template repo.
 
 ---
 <!--/delete-->

@@ -640,8 +640,6 @@ foreach ($files as $file) {
         'VendorName' => $vendorNamespace,
         ':package_name' => $packageName,
         ':package_slug' => $packageSlug,
-        'inengine/module-skeleton' => $vendorSlug.'/'.$packageSlug,
-        'InEngine/module-skeleton' => $vendorName.'/'.$packageSlug,
         'Skeleton' => $className,
         'skeleton' => $packageSlug,
         'migration_table_name' => title_snake($packageSlug),

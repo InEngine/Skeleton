@@ -26,6 +26,6 @@ class SkeletonServiceProvider extends ModuleServiceProvider
 
     protected function modulusPackageName(): string
     {
-        return 'inengine/module-skeleton';
+        return ':vendor_slug/:package_slug';
     }
 }

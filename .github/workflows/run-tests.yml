@@ -67,6 +67,11 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: Allow Composer install on unconfigured template
+        run: |
+          # Template keeps Spatie placeholders; not a Packagist package. CI uses a fixture name only.
+          perl -pi -e 's#":vendor_slug/:package_slug"#"inengine/skeleton-ci"#g' composer.json
+
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update

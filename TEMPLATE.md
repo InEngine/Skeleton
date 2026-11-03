@@ -2,14 +2,16 @@
 
 Customized Spatie `package-skeleton-laravel` for **Modulus-compatible** feature modules.
 
+**Distribution:** GitHub **template repository** only (like Spatie’s skeleton).  
+**Not** a Packagist package — never publish this repo; never `composer require inengine/module-skeleton`.
+
 **GitHub:** https://github.com/InEngine/module-skeleton  
 **Plan:** Documentation `Plan and Design.md` — Step 4b
 
 ## Create a new module
 
-1. Use this repo as a GitHub template (or clone and rename).
-2. Place the package under `InEngine/Modules/{Feature}` next to Modulus when developing in the monorepo.
-3. Run configure (unattended example):
+1. Use this repo as a GitHub template (or clone and rename under `InEngine/Modules/{Feature}`).
+2. Run configure (unattended example):
 
 ```bash
 php ./configure.php -n \
@@ -24,10 +26,10 @@ php ./configure.php -n \
   --description="In App Alert Notifications for Laravel/InEngine Applications"
 ```
 
-4. Confirm the provider extends `InEngine\Modulus\ModuleServiceProvider` and `modulusPackageName()` returns `inengine/{feature}`.
-5. Fill `src/Capabilities/ModuleCapabilityDescriptor.php` for `modulus-inspect`.
+3. Confirm the provider extends `InEngine\Modulus\ModuleServiceProvider` and `modulusPackageName()` returns `inengine/{feature}`.
+4. Fill `src/Capabilities/ModuleCapabilityDescriptor.php` for `modulus-inspect`.
 
-`configure.php` deletes itself and this file when configuration finishes.
+`configure.php` deletes itself and this file when configuration finishes. The **resulting** feature package is what you version, require, and (optionally) publish to Packagist.
 
 ## Author rules (encoded here)
 
@@ -38,12 +40,22 @@ php ./configure.php -n \
 5. SemVer, Pint, Pest, PHPStan; CLI/API first.
 6. Migrations on enable/upgrade; disable/uninstall non-destructive by default.
 
-## Local Modulus dependency
+## Working on the template itself
 
-`composer.json` uses a **path** repository `../Modulus` for the InEngine modules layout. GitHub Actions checks out Modulus as a sibling. After Modulus is on Packagist, switch `require` to a tagged constraint and drop the path repo for published feature modules.
+`composer.json` keeps Spatie-style placeholders (`:vendor_slug/:package_slug`) so Composer will not treat this tree as a real package until configure runs. For local template maintenance:
+
+```bash
+chmod +x scripts/template-dev-install.sh
+./scripts/template-dev-install.sh
+vendor/bin/pest
+```
+
+The script temporarily substitutes a fixture name, installs, then restores `composer.json` via `git checkout`.
+
+After Modulus is on Packagist, configured feature modules should depend on a tagged `inengine/modulus` constraint and may drop the path repository.
 
 ## Quality
 
 - PHP `^8.5`, Laravel 12/13
 - Pint, Pest, PHPStan / Larastan
-- Conventional Commits; SemVer releases
+- Conventional Commits; SemVer releases (on **generated** modules, not this template)
