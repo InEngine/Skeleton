@@ -1,9 +1,10 @@
 <?php
 
+use InEngine\Modulus\ModuleServiceProvider;
 use VendorName\Skeleton\SkeletonServiceProvider;
 
 it('extends the Modulus module service provider handshake', function () {
-    expect(is_subclass_of(SkeletonServiceProvider::class, InEngine\Modulus\ModuleServiceProvider::class))
+    expect(is_subclass_of(SkeletonServiceProvider::class, ModuleServiceProvider::class))
         ->toBeTrue();
 });
 
