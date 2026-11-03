@@ -44,12 +44,12 @@ jobs:
 
     steps:
       - name: Checkout module skeleton
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: module-skeleton
 
       - name: Checkout Modulus (path repository sibling)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: InEngine/Modulus
           ref: feat/modulus-state-store
