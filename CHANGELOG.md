@@ -4,6 +4,17 @@ All notable changes to `module-skeleton` will be documented in this file.
 
 ## Unreleased
 
+### Step 8b — Laravel Boost agent guidelines
+
+- `resources/boost/guidelines/core.blade.php` + `resources/boost/skills/modulus-feature-modules`
+- Repo `AGENTS.md`, `.ai/guidelines/inengine-module-skeleton.md`
+
+### Step 8 — Integration scaffolding
+
+- `resources/INTEGRATION.md`: Modulus lifecycle events, domain events, contracts + DTOs via Laravel container
+- Stub dirs: `src/Contracts`, `src/DataTransferObjects`, `src/Events`
+- README / TEMPLATE point at integration docs
+
 ### Step 7 — Dependencies + reach-down scaffolding
 
 - `resources/DEPENDENCIES.md`: Composer `require` graph; plain deps keep normal Laravel discovery/publish; optional module reach-down for config + `resources/dist` → `public/vendor` + migrations

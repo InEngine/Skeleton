@@ -44,6 +44,8 @@ php ./configure.php -n \
 9. Keep `database/seeders/ModuleSeeder.php` and `modulusSeederClass()`. Seed only with `Modulus::seed(..., confirmed: true)` — never on enable.
 10. `configure.php` creates `resources/dist/css|{js}/{feature}.*` stubs, enables `hasAssets()`, and leaves `resources/ASSETS.md`. Put bundler output in `dist` before publish.
 11. Composer `require` is the hard dependency graph (Step 7). Modulus modules among requires must be enabled before this module can enable; non-Modulus packages need only be installed and keep **normal Laravel discovery / publish**. Optionally **reach down** from `bootstrapNonModulusDependencies()` when this module must also ensure config, UI **`resources/dist` → `public/vendor/{name}`**, or migrations — see `resources/DEPENDENCIES.md`.
+12. Cross-module integration (Step 8): listen to Modulus lifecycle events; dispatch domain events normally; publish contracts + DTOs and bind in the container — see `resources/INTEGRATION.md` (`src/Contracts`, `src/DataTransferObjects`, `src/Events`).
+13. AI agents: keep `AGENTS.md`, `.ai/guidelines/`, and `resources/boost/guidelines` aligned with author rules (Laravel Boost Step 8b).
 
 ## Assets after configure
 

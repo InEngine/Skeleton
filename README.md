@@ -73,6 +73,10 @@ php artisan vendor:publish --tag=":package_slug-config"
 php artisan vendor:publish --tag=":package_slug-views"
 ```
 
+### Inter-module integration
+
+Lifecycle events, domain events, contracts, and DTOs: see [resources/INTEGRATION.md](resources/INTEGRATION.md). Prefer Laravel’s bus + container; optional folders: `src/Contracts`, `src/DataTransferObjects`, `src/Events`.
+
 ### Seeders (explicit only)
 
 ```php
