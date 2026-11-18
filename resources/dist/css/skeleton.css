@@ -1,0 +1,12 @@
+/*
+ | Built stylesheet for the :package_slug module.
+ |
+ | Source lives in this package; build (Vite/Mix/etc.) should write here.
+ | Modulus::publish() copies resources/dist → public/vendor/:package_slug
+ | on install / Composer update (not on enable).
+ |
+ | Host usage example after publish:
+ |   <link rel="stylesheet" href="{{ asset('vendor/:package_slug/css/:package_slug.css') }}">
+ */
+
+/* :package_slug styles */

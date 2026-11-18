@@ -296,6 +296,74 @@ function safeUnlink(string $filename): void
     }
 }
 
+/**
+ * Ensure Spatie/Modulus publishable asset layout under resources/dist.
+ *
+ * Modulus::publish() copies this tree to public/vendor/{package} on install
+ * (not on enable). Stubs are renamed from skeleton.* during configure; this
+ * recreates them if missing so every generated module can ship assets.
+ */
+function ensureDistAssets(string $packageSlug): void
+{
+    $dist = normalizePath(__DIR__.'/resources/dist');
+    $cssDir = $dist.DIRECTORY_SEPARATOR.'css';
+    $jsDir = $dist.DIRECTORY_SEPARATOR.'js';
+
+    foreach ([$dist, $cssDir, $jsDir] as $directory) {
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+    }
+
+    $cssPath = $cssDir.DIRECTORY_SEPARATOR.$packageSlug.'.css';
+    $jsPath = $jsDir.DIRECTORY_SEPARATOR.$packageSlug.'.js';
+
+    if (! is_file($cssPath)) {
+        file_put_contents(
+            $cssPath,
+            <<<CSS
+/*
+ | Built stylesheet for the {$packageSlug} module.
+ | Build output belongs here. Modulus::publish() → public/vendor/{$packageSlug}
+ */
+
+/* {$packageSlug} styles */
+
+CSS
+        );
+    }
+
+    if (! is_file($jsPath)) {
+        file_put_contents(
+            $jsPath,
+            <<<JS
+/*
+ | Built script for the {$packageSlug} module.
+ | Build output belongs here. Modulus::publish() → public/vendor/{$packageSlug}
+ */
+
+/* {$packageSlug} scripts */
+
+JS
+        );
+    }
+
+    $assetsDoc = normalizePath(__DIR__.'/resources/ASSETS.md');
+
+    if (! is_file($assetsDoc)) {
+        file_put_contents(
+            $assetsDoc,
+            <<<MD
+# Frontend assets
+
+Built files live in `resources/dist` and are published with `Modulus::publish()`
+on install (not enable). See package README for details.
+
+MD
+        );
+    }
+}
+
 function normalizePath(string $path): string
 {
     return str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -654,10 +722,15 @@ foreach ($files as $file) {
         str_contains($file, normalizePath('src/Commands/SkeletonCommand.php')) => rename($file, normalizePath('./src/Commands/'.$className.'Command.php')),
         str_contains($file, normalizePath('database/migrations/create_skeleton_table.php.stub')) => rename($file, normalizePath('./database/migrations/create_'.title_snake($packageSlugWithoutPrefix).'_table.php.stub')),
         str_contains($file, normalizePath('config/skeleton.php')) => rename($file, normalizePath('./config/'.$packageSlugWithoutPrefix.'.php')),
+        str_contains($file, normalizePath('resources/dist/css/skeleton.css')) => rename($file, normalizePath('./resources/dist/css/'.$packageSlugWithoutPrefix.'.css')),
+        str_contains($file, normalizePath('resources/dist/js/skeleton.js')) => rename($file, normalizePath('./resources/dist/js/'.$packageSlugWithoutPrefix.'.js')),
         str_contains($file, 'README.md') => remove_readme_paragraphs($file),
         default => null,
     };
 }
+
+ensureDistAssets($packageSlugWithoutPrefix);
+writeln(green('  ✓ Ensured resources/dist CSS/JS stubs for Modulus::publish()'));
 
 safeUnlink(__DIR__.'/TEMPLATE.md');
 writeln(green('  ✓ Removed template-only docs'));
@@ -719,4 +792,6 @@ resolve('delete-script', true) && unlink(__FILE__);
 writeln('');
 writeln(green(bold('  Ready. Ship a Modulus-compatible inengine/{feature} module.')));
 writeln(dim('  Remember: install ≠ enable; extend ModuleServiceProvider; fill the capability descriptor.'));
+writeln(dim('  Assets: put built CSS/JS in resources/dist (see resources/ASSETS.md); Modulus::publish() on install.'));
+writeln(dim('  Seed: Modulus::seed(..., confirmed: true) only — never on enable.'));
 writeln('');

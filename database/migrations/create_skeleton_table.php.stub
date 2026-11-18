@@ -6,8 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     *
+     * Idempotent: Modulus disable/uninstall is non-destructive, so tables (and
+     * data) may already exist when this module is enabled again after a prior
+     * install. Skip create when the table is present so migrate-on-enable does
+     * not fail; the migrator still records this migration as ran.
+     */
+    public function up(): void
     {
+        if (Schema::hasTable('migration_table_name_table')) {
+            return;
+        }
+
         Schema::create('migration_table_name_table', function (Blueprint $table) {
             $table->id();
 
@@ -15,5 +27,15 @@ return new class extends Migration
 
             $table->timestamps();
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * Prefer migrate:rollback / explicit purge — not Modulus disable/uninstall.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('migration_table_name_table');
     }
 };

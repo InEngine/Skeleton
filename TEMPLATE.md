@@ -39,6 +39,23 @@ php ./configure.php -n \
 4. Install ≠ enable; default disabled until `modulus:enable`.
 5. SemVer, Pint, Pest, PHPStan; CLI/API first.
 6. Migrations on enable/upgrade; disable/uninstall non-destructive by default.
+7. Guard creates with `Schema::hasTable` — tables may already exist after a prior install/uninstall.
+8. Ship Spatie layouts for install-time `Modulus::publish()` (modulus-composer): `config/`, `resources/dist` → `public/vendor/{feature}`. Views/lang load from the package unless the host opts into override publish.
+9. Keep `database/seeders/ModuleSeeder.php` and `modulusSeederClass()`. Seed only with `Modulus::seed(..., confirmed: true)` — never on enable.
+10. `configure.php` creates `resources/dist/css|{js}/{feature}.*` stubs, enables `hasAssets()`, and leaves `resources/ASSETS.md`. Put bundler output in `dist` before publish.
+
+## Assets after configure
+
+```text
+resources/
+  ASSETS.md          # author docs (not published to public/)
+  dist/
+    css/{feature}.css
+    js/{feature}.js
+  views/             # Blade — loaded from package on enable
+```
+
+Build into `dist`, then `Modulus::publish()` on install.
 
 ## Working on the template itself
 

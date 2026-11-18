@@ -37,36 +37,47 @@ This is where your description should go. Limit it to a paragraph or two.
 composer require :vendor_slug/:package_slug
 ```
 
-On an InEngine host with Modulus, the package is **discovered but disabled** until:
+On an InEngine host with Modulus: **install ≠ enable**.
+
+1. **Install** (Composer) then publish host resources (config + built assets from `resources/dist`):
+
+```php
+Modulus::publish(':vendor_slug/:package_slug');
+```
+
+(`inengine/modulus-composer` will call this after require/update. Until then, call it manually.)
+
+2. **Enable** (migrate schema + boot provider — does **not** publish assets or seed):
 
 ```bash
 php artisan modulus:enable :vendor_slug/:package_slug
 ```
 
-Publish and run migrations when enabling / upgrading (host or module hooks — see Modulus docs):
+### Frontend assets (`resources/dist`)
 
-```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
-```
+Built CSS/JS belong in `resources/dist/` (see [resources/ASSETS.md](resources/ASSETS.md)).  
+`configure.php` creates `resources/dist/css/:package_slug.css` and `resources/dist/js/:package_slug.js` stubs and enables Spatie `hasAssets()`.
 
-Publish the config file with:
+After `Modulus::publish()`, assets land at `public/vendor/:package_slug/`.
+
+Point Vite/Mix **outDir** at `resources/dist` — do not rely on enable to copy assets.
+
+### Config / views (optional host overrides)
+
+Runtime still merges config and loads views from the package on enable. To customize on the host:
 
 ```bash
 php artisan vendor:publish --tag=":package_slug-config"
-```
-
-```php
-return [
-
-];
-```
-
-Optionally publish views:
-
-```bash
 php artisan vendor:publish --tag=":package_slug-views"
 ```
+
+### Seeders (explicit only)
+
+```php
+Modulus::seed(':vendor_slug/:package_slug', confirmed: true);
+```
+
+Never seeded on enable/install. Skeleton ships `database/seeders/ModuleSeeder` with confirmation required.
 
 ## Usage
 
