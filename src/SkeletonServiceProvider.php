@@ -87,6 +87,19 @@ class SkeletonServiceProvider extends ModuleServiceProvider
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * Checklist for modulus-ui / `modulus:doctor` after upgrades.
+     * Example: return ['Review config/skeleton.php after 1.x → 2.x'];
+     *
+     * @return list<string>
+     */
+    public function modulusManualAttentionItems(): array
+    {
+        return [];
+    }
+
+    /**
      * Optional: copy a dependency config file into the host config/ directory.
      *
      * Prefer the package’s normal `publishes()` / `vendor:publish` when enough.

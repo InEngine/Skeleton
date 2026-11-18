@@ -4,6 +4,11 @@ All notable changes to `module-skeleton` will be documented in this file.
 
 ## Unreleased
 
+### Step 9 alignment
+
+- `modulusManualAttentionItems()` stub for modulus-ui / doctor post-upgrade checklists
+- INTEGRATION.md notes SemVer `~x.y.z` default and UI approval for minor/major bumps
+
 ### Step 8b — Laravel Boost agent guidelines
 
 - `resources/boost/guidelines/core.blade.php` + `resources/boost/skills/modulus-feature-modules`

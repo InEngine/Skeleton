@@ -2,6 +2,12 @@
 
 Use Laravel’s event bus and container — not a custom Modulus plugin API.
 
+## Upgrades + modulus-ui
+
+- Hosts should require modules with `~x.y.z` by default (patches within the minor). Approving a minor/major bump is a UI/CLI action that rewrites Composer constraints (modulus-composer).
+- Override `modulusManualAttentionItems()` for post-upgrade checklists; Modulus dispatches `ModuleManualAttentionRequired` for admin notifications.
+- modulus-ui should also consume `modulus:doctor` / `DoctorFinding` rows (`constraint_too_loose`, `manual_attention`, missing packages).
+
 ## React to Modulus lifecycle
 
 ```php
