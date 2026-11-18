@@ -353,7 +353,7 @@ JS
     if (! is_file($assetsDoc)) {
         file_put_contents(
             $assetsDoc,
-            <<<MD
+            <<<'MD'
 # Frontend assets
 
 Built files live in `resources/dist` and are published with `Modulus::publish()`
