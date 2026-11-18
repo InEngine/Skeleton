@@ -4,6 +4,13 @@ All notable changes to `module-skeleton` will be documented in this file.
 
 ## Unreleased
 
+### Step 7 — Dependencies + reach-down scaffolding
+
+- `resources/DEPENDENCIES.md`: Composer `require` graph; plain deps keep normal Laravel discovery/publish; optional module reach-down for config + `resources/dist` → `public/vendor` + migrations
+- Provider `activating()` → `bootstrapNonModulusDependencies()` stub (empty by default)
+- Optional helpers: `publishDependencyConfig()`, `publishDependencyDistAssets()`
+- README / TEMPLATE note enable dep checks and optional reach-down
+
 ### Step 6 alignment (Modulus lifecycle / publish / seed)
 
 - Idempotent migration stub (`Schema::hasTable` + `down()` via `dropIfExists`)

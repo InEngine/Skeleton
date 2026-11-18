@@ -53,6 +53,8 @@ Modulus::publish(':vendor_slug/:package_slug');
 php artisan modulus:enable :vendor_slug/:package_slug
 ```
 
+Enable fails if required **Modulus** modules are disabled, or if any Composer `require` is not installed. Plain (non-Modulus) packages still use **normal Laravel discovery / `vendor:publish`**; optionally reach down from `activating()` when this module must also ensure config, UI **dist → `public/vendor/`**, or migrations — see [resources/DEPENDENCIES.md](resources/DEPENDENCIES.md).
+
 ### Frontend assets (`resources/dist`)
 
 Built CSS/JS belong in `resources/dist/` (see [resources/ASSETS.md](resources/ASSETS.md)).  

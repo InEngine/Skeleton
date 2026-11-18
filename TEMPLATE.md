@@ -43,6 +43,7 @@ php ./configure.php -n \
 8. Ship Spatie layouts for install-time `Modulus::publish()` (modulus-composer): `config/`, `resources/dist` → `public/vendor/{feature}`. Views/lang load from the package unless the host opts into override publish.
 9. Keep `database/seeders/ModuleSeeder.php` and `modulusSeederClass()`. Seed only with `Modulus::seed(..., confirmed: true)` — never on enable.
 10. `configure.php` creates `resources/dist/css|{js}/{feature}.*` stubs, enables `hasAssets()`, and leaves `resources/ASSETS.md`. Put bundler output in `dist` before publish.
+11. Composer `require` is the hard dependency graph (Step 7). Modulus modules among requires must be enabled before this module can enable; non-Modulus packages need only be installed and keep **normal Laravel discovery / publish**. Optionally **reach down** from `bootstrapNonModulusDependencies()` when this module must also ensure config, UI **`resources/dist` → `public/vendor/{name}`**, or migrations — see `resources/DEPENDENCIES.md`.
 
 ## Assets after configure
 
