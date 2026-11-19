@@ -26,7 +26,7 @@ jobs:
     timeout-minutes: 5
     defaults:
       run:
-        working-directory: module-skeleton
+        working-directory: Skeleton
     strategy:
       fail-fast: true
       matrix:
@@ -43,10 +43,10 @@ jobs:
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
-      - name: Checkout module skeleton
+      - name: Checkout Skeleton template
         uses: actions/checkout@v7
         with:
-          path: module-skeleton
+          path: Skeleton
 
       - name: Checkout Modulus (path repository sibling)
         uses: actions/checkout@v7

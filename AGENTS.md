@@ -1,6 +1,6 @@
-# InEngine module-skeleton
+# InEngine Skeleton
 
-GitHub **template** for Modulus-compatible feature modules (not a Packagist package).
+GitHub **template** (`InEngine/Skeleton`) for Modulus-compatible feature modules (not a Packagist package).
 
 ## Create a module
 
@@ -36,7 +36,7 @@ php ./configure.php -n \
 - Update CHANGELOG / TEMPLATE / resources docs when authoring conventions change.
 - Be concise in replies.
 
-=== inengine/module-skeleton rules ===
+=== inengine/skeleton rules ===
 
 # Feature module conventions
 
@@ -46,5 +46,6 @@ php ./configure.php -n \
 - Contracts + DTOs + domain events via Laravel container/bus (`resources/INTEGRATION.md`).
 - Idempotent migrations (`Schema::hasTable`). Non-destructive disable/uninstall.
 - Never use `inengine/modulus-*` for feature modules.
+- Git author: James Johnson / excellentingenuity; `.githooks` strips Cursor co-author trailers.
 
 </laravel-boost-guidelines>

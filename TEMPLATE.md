@@ -5,7 +5,7 @@ Customized Spatie `package-skeleton-laravel` for **Modulus-compatible** feature 
 **Distribution:** GitHub **template repository** only (like Spatie’s skeleton).  
 **Not** a Packagist package — never publish this repo; never `composer require inengine/module-skeleton`.
 
-**GitHub:** https://github.com/InEngine/module-skeleton  
+**GitHub:** https://github.com/InEngine/Skeleton  
 **Plan:** Documentation `Plan and Design.md` — Step 4b
 
 ## Create a new module
