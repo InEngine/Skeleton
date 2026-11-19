@@ -7,9 +7,17 @@
 <!--delete-->
 ---
 
-**InEngine / Modulus feature-module template** (forked from Spatie `package-skeleton-laravel`).
+# InEngine Skeleton
 
-This repository is a **GitHub template only** — same model as Spatie’s package skeleton. It is **not** published to Packagist and must **not** be `composer require`’d. Create modules with **Use this template**, then run `configure.php`.
+**GitHub template** for [Modulus](https://github.com/InEngine/Modulus)-compatible feature modules (`inengine/{feature}`).
+
+This repository is a **template only** — same distribution model as Spatie’s package skeleton. It is **not** a Packagist package and must **not** be `composer require`’d. Create modules with **Use this template**, then run `configure.php`. The **resulting** feature package may be published to Packagist as `inengine/{feature}` — never this template repo.
+
+## Attribution
+
+Forked from and based on Spatie’s **[package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)** ([Spatie](https://spatie.be) / [spatie.be](https://spatie.be)). InEngine customizes that skeleton for Modulus handshake, publish/seed rules, and Boost guidelines. Spatie remains credited for the upstream package-skeleton tooling and layout.
+
+## Create a module
 
 1. Click **Use this template** (or clone into `InEngine/Modules/{Feature}`).
 2. Read **[TEMPLATE.md](TEMPLATE.md)** for author rules and monorepo layout.
@@ -24,7 +32,11 @@ php ./configure.php -n \
   --no-ray
 ```
 
-`php ./configure.php --help` lists all options. After configure, the **new** feature package may be published to Packagist as `inengine/{feature}` — never this template repo.
+`php ./configure.php --help` lists all options.
+
+## License
+
+The MIT License (MIT). See [LICENSE.md](LICENSE.md). Upstream Spatie skeleton is also MIT.
 
 ---
 <!--/delete-->
@@ -100,6 +112,12 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Credits
+
+- [Spatie](https://spatie.be) — [package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel) (upstream template this package was generated from)
+- [James Johnson](https://github.com/excellentingenuity)
+- [All Contributors](../../contributors)
 
 ## License
 

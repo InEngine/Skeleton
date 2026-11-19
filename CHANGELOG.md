@@ -4,6 +4,8 @@ All notable changes to `module-skeleton` will be documented in this file.
 
 ## Unreleased
 
+- Public GitHub template prep (not Packagist); README/TEMPLATE credit Spatie [package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)
+
 ### Step 9 alignment
 
 - `modulusManualAttentionItems()` stub for modulus-ui / doctor post-upgrade checklists
