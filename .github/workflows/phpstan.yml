@@ -6,23 +6,47 @@ on:
       - '**.php'
       - 'phpstan.neon.dist'
       - '.github/workflows/phpstan.yml'
+  pull_request:
+    paths:
+      - '**.php'
+      - 'phpstan.neon.dist'
+      - '.github/workflows/phpstan.yml'
 
 jobs:
   phpstan:
     name: phpstan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: Skeleton
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout Skeleton template
+        uses: actions/checkout@v7
+        with:
+          path: Skeleton
+
+      - name: Checkout Modulus (path repository sibling)
+        uses: actions/checkout@v7
+        with:
+          repository: InEngine/Modulus
+          ref: feat/modulus-state-store
+          path: Modulus
+          token: ${{ secrets.INENGINE_CI_TOKEN }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          extensions: mbstring
           coverage: none
 
+      - name: Allow Composer install on unconfigured template
+        run: |
+          perl -pi -e 's#":vendor_slug/:package_slug"#"inengine/skeleton-ci"#g' composer.json
+
       - name: Install composer dependencies
-        uses: ramsey/composer-install@v4
+        run: composer update --prefer-stable --prefer-dist --no-interaction
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github
+        run: ./vendor/bin/phpstan analyse --memory-limit=512M --error-format=github
