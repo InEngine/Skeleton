@@ -49,3 +49,7 @@ php ./configure.php -n \
 - Git author: James Johnson / excellentingenuity; `.githooks` strips Cursor co-author trailers.
 
 </laravel-boost-guidelines>
+
+## Git
+
+- Work on **`dev`**; open a PR into **`main`**. See InEngine Documentation `Git workflow.md`.
