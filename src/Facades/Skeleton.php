@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Facade;
  */
 class Skeleton extends Facade
 {
+    /**
+     * {@inheritdoc}
+     */
     protected static function getFacadeAccessor(): string
     {
         return \VendorName\Skeleton\Skeleton::class;

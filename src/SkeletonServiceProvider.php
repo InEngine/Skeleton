@@ -8,8 +8,17 @@ use Spatie\LaravelPackageTools\Package;
 use VendorName\Skeleton\Commands\SkeletonCommand;
 use VendorName\Skeleton\Database\Seeders\ModuleSeeder;
 
+/**
+ * Service provider for the Modulus feature-module template (Spatie package-skeleton fork).
+ *
+ * Keeps the `VendorName\Skeleton` namespace; rename it and the `:vendor_slug/:package_slug`
+ * placeholders when creating a real module. See {@see ModuleServiceProvider}.
+ */
 class SkeletonServiceProvider extends ModuleServiceProvider
 {
+    /**
+     * Name the package and register its config, views, assets, migration, and command.
+     */
     public function configurePackage(Package $package): void
     {
         /*
@@ -35,6 +44,11 @@ class SkeletonServiceProvider extends ModuleServiceProvider
             ->hasCommand(SkeletonCommand::class);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Template placeholder; replace with the real Composer package name (e.g. `acme/my-module`).
+     */
     protected function modulusPackageName(): string
     {
         return ':vendor_slug/:package_slug';
