@@ -74,6 +74,14 @@ The script temporarily substitutes a fixture name, installs, then restores `comp
 
 After Modulus is on Packagist, configured feature modules should depend on a tagged `inengine/modulus` constraint and may drop the path repository.
 
+## Upstream (Spatie)
+
+```bash
+./scripts/sync-upstream-spatie.sh
+```
+
+Fetches `spatie/package-skeleton-laravel`. Merge carefully — keep InEngine `configure.php` (Pest/Pint), `ModuleServiceProvider` handshake, and capability descriptor.
+
 ## Quality
 
 - PHP `^8.5`, Laravel 12/13
