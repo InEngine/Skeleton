@@ -37,7 +37,7 @@ php ./configure.php -n \
 2. Extend `ModuleServiceProvider`; declare `modulusPackageName()`.
 3. Discovery only via `extra.laravel.providers` / aliases.
 4. Install ≠ enable; default disabled until `modulus:enable`.
-5. SemVer, Pint, Pest, PHPStan; CLI/API first.
+5. SemVer, Pint, Pest, PHPStan; CLI/API first. CI templates: Documentation `ci/` (Step 11 quality gates — **not** operator UI).
 6. Migrations on enable/upgrade; disable/uninstall non-destructive by default.
 7. Guard creates with `Schema::hasTable` — tables may already exist after a prior install/uninstall.
 8. Ship Spatie layouts for install-time `Modulus::publish()` (modulus-composer): `config/`, `resources/dist` → `public/vendor/{feature}`. Views/lang load from the package unless the host opts into override publish.
