@@ -32,7 +32,6 @@ jobs:
           repository: InEngine/Modulus
           ref: main
           path: Modulus
-          token: ${{ secrets.INENGINE_CI_TOKEN }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
