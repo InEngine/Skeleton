@@ -78,5 +78,6 @@ After Modulus is on Packagist, configured feature modules should depend on a tag
 
 - PHP `^8.5`, Laravel 12/13
 - **Pest** by default (selected in `configure.php`; `--no-pest` switches the stub suite to PHPUnit)
-- Pint, PHPStan / Larastan (also toggled in `configure.php`)
+- **Pint** by default (selected in `configure.php`; `--no-pint` drops Pint + the style workflow)
+- PHPStan / Larastan (also toggled in `configure.php`)
 - Conventional Commits; SemVer releases (on **generated** modules, not this template)

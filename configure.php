@@ -110,7 +110,7 @@ function options(): array
         'description' => ['type' => 'string', 'group' => 'Package', 'label' => 'Package description', 'default' => '"This is my package <slug>"'],
         'pest' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Use Pest?', 'hint' => 'Recommended InEngine default (same as Modulus / Modulus Composer). Choose no for plain PHPUnit.', 'default' => true],
         'phpstan' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable PhpStan?', 'hint' => 'Static analysis to catch bugs before they reach production.', 'default' => true],
-        'pint' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable Laravel Pint?', 'hint' => 'Automatic code formatting following Laravel conventions.', 'default' => true],
+        'pint' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Use Laravel Pint?', 'hint' => 'Recommended InEngine default (same as Modulus / Modulus Composer / Core). Auto-formats PHP on push.', 'default' => true],
         'dependabot' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable Dependabot?', 'hint' => 'Automated dependency update PRs via GitHub.', 'default' => true],
         'ray' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Use Ray for debugging?', 'hint' => 'Debug your package with the Ray desktop app.', 'default' => false],
         'changelog-workflow' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Use automatic changelog updater workflow?', 'hint' => 'Automatically updates CHANGELOG.md when a new release is tagged.', 'default' => true],
@@ -966,6 +966,11 @@ if (! $usePest) {
     writeln(green('  ✓ Converted tests to PHPUnit (Pest disabled)'));
 }
 
+if (! $useLaravelPint) {
+    $removeDeps[] = 'laravel/pint';
+    $removeScripts[] = 'format';
+}
+
 if (! $usePhpStan) {
     $removeDeps = array_merge($removeDeps, [
         'phpstan/extension-installer',
@@ -995,5 +1000,5 @@ writeln(green(bold('  Ready. Ship a Modulus-compatible inengine/{feature} module
 writeln(dim('  Remember: install ≠ enable; extend ModuleServiceProvider; fill the capability descriptor.'));
 writeln(dim('  Assets: put built CSS/JS in resources/dist (see resources/ASSETS.md); Modulus::publish() on install.'));
 writeln(dim('  Seed: Modulus::seed(..., confirmed: true) only — never on enable.'));
-writeln(dim('  Tests: Pest is the InEngine default (same as Modulus / Modulus Composer).'));
+writeln(dim('  Quality: Pest + Pint are InEngine defaults (same as Modulus / Modulus Composer / Core).'));
 writeln('');
