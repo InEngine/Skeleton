@@ -3,12 +3,14 @@
 namespace VendorName\Skeleton\Capabilities;
 
 /**
- * Static capability metadata for modulus-inspect (and future compat tooling).
+ * Static capability metadata for the Modulus Capability Registry (readable without booting).
  *
- * Keep this readable without booting the module: no container, no facades,
- * no side effects. Authors fill in provides / requires / events / peers.
+ * Fill provides / requires / peers / events / binds / drivers. Prefer tokens such as
+ * `alerts.dispatch` or driver forms `person.user.driver:local`. Also consider Composer
+ * `provide` in composer.json for reuse outside InEngine — see docs/STEP-14.md on Modulus.
  *
  * @phpstan-type CapabilityList list<string>
+ * @phpstan-type DriverMap array<string, list<string>>
  */
 class ModuleCapabilityDescriptor
 {
@@ -21,6 +23,22 @@ class ModuleCapabilityDescriptor
     }
 
     /**
+     * Optional UI display label (e.g. modulus-ui → "Modulus").
+     */
+    public static function label(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Optional short description for operator UI / inspect.
+     */
+    public static function description(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Capabilities this module provides (tokens for peers to require).
      *
      * @return CapabilityList
@@ -28,7 +46,7 @@ class ModuleCapabilityDescriptor
     public static function provides(): array
     {
         return [
-            // e.g. 'alerts.dispatch',
+            // e.g. 'alerts.dispatch', 'auth.method:local', 'person.user.driver:local',
         ];
     }
 
@@ -40,7 +58,7 @@ class ModuleCapabilityDescriptor
     public static function requires(): array
     {
         return [
-            // e.g. 'users.auth',
+            // e.g. 'identity.demographics',
         ];
     }
 
@@ -69,24 +87,56 @@ class ModuleCapabilityDescriptor
     }
 
     /**
-     * Full descriptor payload for inspect tooling.
+     * Interface FQCNs this module documents binding (bindings still happen in the provider).
+     *
+     * @return CapabilityList
+     */
+    public static function binds(): array
+    {
+        return [
+            // e.g. \VendorName\Skeleton\Contracts\Something::class,
+        ];
+    }
+
+    /**
+     * Explicit driver map (optional). Tokens in provides with `family:name` are also indexed.
+     *
+     * @return DriverMap
+     */
+    public static function drivers(): array
+    {
+        return [
+            // e.g. 'person.user.driver' => ['local'],
+        ];
+    }
+
+    /**
+     * Full descriptor payload for the Capability Registry.
      *
      * @return array{
      *     package: string,
+     *     label: string|null,
+     *     description: string|null,
      *     provides: CapabilityList,
      *     requires: CapabilityList,
      *     events: CapabilityList,
-     *     peers: CapabilityList
+     *     peers: CapabilityList,
+     *     binds: CapabilityList,
+     *     drivers: DriverMap
      * }
      */
     public static function toArray(): array
     {
         return [
             'package' => static::packageName(),
+            'label' => static::label(),
+            'description' => static::description(),
             'provides' => static::provides(),
             'requires' => static::requires(),
             'events' => static::events(),
             'peers' => static::peers(),
+            'binds' => static::binds(),
+            'drivers' => static::drivers(),
         ];
     }
 }
