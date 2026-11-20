@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Unit coverage for {@see \VendorName\Skeleton\Capabilities\ModuleCapabilityDescriptor}.
+ * Unit coverage for {@see ModuleCapabilityDescriptor}.
  */
 
 use VendorName\Skeleton\Capabilities\ModuleCapabilityDescriptor;

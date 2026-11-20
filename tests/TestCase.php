@@ -3,6 +3,8 @@
 namespace VendorName\Skeleton\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use VendorName\Skeleton\SkeletonServiceProvider;
 
@@ -26,8 +28,8 @@ class TestCase extends Orchestra
     /**
      * Register the package service providers under test.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return list<class-string<\Illuminate\Support\ServiceProvider>>
+     * @param  Application  $app
+     * @return list<class-string<ServiceProvider>>
      */
     protected function getPackageProviders($app)
     {
@@ -39,7 +41,7 @@ class TestCase extends Orchestra
     /**
      * Configure the testing environment (default database connection; optional migration loading below).
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      */
     public function getEnvironmentSetUp($app)
     {

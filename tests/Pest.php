@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pest bootstrap: binds {@see \VendorName\Skeleton\Tests\TestCase} to every test in this directory.
+ * Pest bootstrap: binds {@see TestCase} to every test in this directory.
  */
 
 use VendorName\Skeleton\Tests\TestCase;
