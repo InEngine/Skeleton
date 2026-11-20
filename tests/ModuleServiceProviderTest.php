@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Coverage for the Modulus handshake implemented by {@see \VendorName\Skeleton\SkeletonServiceProvider}.
+ */
+
 use InEngine\Modulus\ModuleServiceProvider;
 use VendorName\Skeleton\SkeletonServiceProvider;
 

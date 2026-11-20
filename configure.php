@@ -108,6 +108,7 @@ function options(): array
         'package-name' => ['type' => 'string', 'group' => 'Package', 'label' => 'Package name', 'default' => 'the current directory name', 'required' => true],
         'class-name' => ['type' => 'string', 'group' => 'Package', 'label' => 'Class name', 'default' => 'studly package name'],
         'description' => ['type' => 'string', 'group' => 'Package', 'label' => 'Package description', 'default' => '"This is my package <slug>"'],
+        'pest' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Use Pest?', 'hint' => 'Recommended InEngine default (same as Modulus / Modulus Composer). Choose no for plain PHPUnit.', 'default' => true],
         'phpstan' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable PhpStan?', 'hint' => 'Static analysis to catch bugs before they reach production.', 'default' => true],
         'pint' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable Laravel Pint?', 'hint' => 'Automatic code formatting following Laravel conventions.', 'default' => true],
         'dependabot' => ['type' => 'bool', 'group' => 'Tooling', 'label' => 'Enable Dependabot?', 'hint' => 'Automated dependency update PRs via GitHub.', 'default' => true],
@@ -413,8 +414,18 @@ function getFilesWithPlaceholders(): array
     return $files;
 }
 
-function modifyComposerJson(array $removeDeps, array $removeScripts): void
-{
+/**
+ * @param  list<string>  $removeDeps
+ * @param  list<string>  $removeScripts
+ * @param  array<string, string>  $scriptReplacements
+ * @param  list<string>  $removeAllowPlugins
+ */
+function modifyComposerJson(
+    array $removeDeps,
+    array $removeScripts,
+    array $scriptReplacements = [],
+    array $removeAllowPlugins = [],
+): void {
     $path = __DIR__.'/composer.json';
     $data = json_decode(file_get_contents($path), true);
 
@@ -426,7 +437,180 @@ function modifyComposerJson(array $removeDeps, array $removeScripts): void
         unset($data['scripts'][$name]);
     }
 
-    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    foreach ($scriptReplacements as $name => $command) {
+        $data['scripts'][$name] = $command;
+    }
+
+    foreach ($removeAllowPlugins as $name) {
+        unset($data['config']['allow-plugins'][$name]);
+    }
+
+    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL);
+}
+
+/**
+ * Replace Pest `it()` suites with PHPUnit TestCase classes when --no-pest is chosen.
+ */
+function convertSkeletonTestsToPhpUnit(): void
+{
+    safeUnlink(__DIR__.'/tests/Pest.php');
+    safeUnlink(__DIR__.'/tests/ArchTest.php');
+
+    file_put_contents(__DIR__.'/tests/ExampleTest.php', <<<'PHP'
+<?php
+
+namespace VendorName\Skeleton\Tests;
+
+/**
+ * Placeholder smoke test confirming the PHPUnit suite runs.
+ */
+class ExampleTest extends TestCase
+{
+    public function test_it_can_test(): void
+    {
+        $this->assertTrue(true);
+    }
+}
+
+PHP);
+
+    file_put_contents(__DIR__.'/tests/ModuleServiceProviderTest.php', <<<'PHP'
+<?php
+
+namespace VendorName\Skeleton\Tests;
+
+use InEngine\Modulus\ModuleServiceProvider;
+use ReflectionMethod;
+use VendorName\Skeleton\SkeletonServiceProvider;
+
+/**
+ * Coverage for the Modulus handshake implemented by {@see SkeletonServiceProvider}.
+ */
+class ModuleServiceProviderTest extends TestCase
+{
+    public function test_it_extends_the_modulus_module_service_provider_handshake(): void
+    {
+        $this->assertTrue(is_subclass_of(SkeletonServiceProvider::class, ModuleServiceProvider::class));
+    }
+
+    public function test_it_declares_the_composer_package_name_for_modulus_registration(): void
+    {
+        $provider = $this->app->getProvider(SkeletonServiceProvider::class);
+        $method = new ReflectionMethod($provider, 'modulusPackageName');
+
+        $this->assertSame(':vendor_slug/:package_slug', $method->invoke($provider));
+    }
+}
+
+PHP);
+
+    file_put_contents(__DIR__.'/tests/CapabilityDescriptorTest.php', <<<'PHP'
+<?php
+
+namespace VendorName\Skeleton\Tests;
+
+use VendorName\Skeleton\Capabilities\ModuleCapabilityDescriptor;
+
+/**
+ * Unit coverage for {@see ModuleCapabilityDescriptor}.
+ */
+class CapabilityDescriptorTest extends TestCase
+{
+    public function test_it_exposes_a_static_capability_payload_for_inspect_tooling(): void
+    {
+        $payload = ModuleCapabilityDescriptor::toArray();
+
+        $this->assertArrayHasKey('package', $payload);
+        $this->assertArrayHasKey('provides', $payload);
+        $this->assertArrayHasKey('requires', $payload);
+        $this->assertArrayHasKey('events', $payload);
+        $this->assertArrayHasKey('peers', $payload);
+        $this->assertSame(':vendor_slug/:package_slug', $payload['package']);
+        $this->assertIsArray($payload['provides']);
+        $this->assertIsArray($payload['requires']);
+        $this->assertIsArray($payload['events']);
+        $this->assertIsArray($payload['peers']);
+    }
+}
+
+PHP);
+
+    file_put_contents(__DIR__.'/tests/DependencyBootstrapTest.php', <<<'PHP'
+<?php
+
+namespace VendorName\Skeleton\Tests;
+
+use Illuminate\Support\Facades\File;
+use ReflectionMethod;
+use VendorName\Skeleton\SkeletonServiceProvider;
+
+/**
+ * Coverage for {@see SkeletonServiceProvider} dependency config and dist asset publishing.
+ */
+class DependencyBootstrapTest extends TestCase
+{
+    public function test_it_copies_dependency_config_into_the_host_config_path(): void
+    {
+        $vendorRoot = base_path('vendor/acme/demo-pkg');
+        $source = $vendorRoot.'/config/demo.php';
+        File::ensureDirectoryExists(dirname($source));
+        File::put($source, "<?php\n\nreturn ['ok' => true];\n");
+
+        $destination = config_path('demo.php');
+        if (File::exists($destination)) {
+            File::delete($destination);
+        }
+
+        try {
+            $provider = $this->app->getProvider(SkeletonServiceProvider::class);
+            $method = new ReflectionMethod($provider, 'publishDependencyConfig');
+            $method->setAccessible(true);
+            $method->invoke($provider, 'acme/demo-pkg', 'config/demo.php');
+
+            $this->assertTrue(File::isFile($destination));
+            $this->assertStringContainsString("'ok' => true", File::get($destination));
+        } finally {
+            File::delete($destination);
+            File::deleteDirectory($vendorRoot);
+        }
+    }
+
+    public function test_it_copies_dependency_dist_assets_into_public_vendor(): void
+    {
+        $vendorRoot = base_path('vendor/acme/demo-pkg');
+        $source = $vendorRoot.'/resources/dist/css/app.css';
+        File::ensureDirectoryExists(dirname($source));
+        File::put($source, '/* demo */');
+
+        $destination = public_path('vendor/demo-pkg');
+        if (File::isDirectory($destination)) {
+            File::deleteDirectory($destination);
+        }
+
+        try {
+            $provider = $this->app->getProvider(SkeletonServiceProvider::class);
+            $method = new ReflectionMethod($provider, 'publishDependencyDistAssets');
+            $method->setAccessible(true);
+            $method->invoke($provider, 'acme/demo-pkg');
+
+            $this->assertTrue(File::isFile($destination.'/css/app.css'));
+            $this->assertSame('/* demo */', File::get($destination.'/css/app.css'));
+        } finally {
+            File::deleteDirectory($destination);
+            File::deleteDirectory($vendorRoot);
+        }
+    }
+}
+
+PHP);
+
+    // CI + local scripts expect Pest by default; point them at PHPUnit when opted out.
+    $workflow = __DIR__.'/.github/workflows/run-tests.yml';
+    if (is_file($workflow)) {
+        $contents = file_get_contents($workflow);
+        $contents = str_replace('vendor/bin/pest --ci', 'vendor/bin/phpunit', $contents);
+        file_put_contents($workflow, $contents);
+    }
 }
 
 function getGitHubApiEndpoint(string $endpoint): ?stdClass
@@ -662,6 +846,7 @@ $description = resolve('description', "This is my package {$packageSlug}");
 
 section('Tooling', 'Choose which dev tools to include. You can always add these later.');
 
+$usePest = resolve('pest', true);
 $usePhpStan = resolve('phpstan', true);
 $useLaravelPint = resolve('pint', true);
 $useDependabot = resolve('dependabot', true);
@@ -683,6 +868,7 @@ writeln("  Namespace   {$vendorNamespace}\\{$className}");
 writeln("  Class       {$className}");
 writeln('');
 writeln('  Tooling');
+writeln('  Pest             '.($usePest ? green('yes') : dim('no')));
 writeln('  PhpStan          '.($usePhpStan ? green('yes') : dim('no')));
 writeln('  Laravel Pint     '.($useLaravelPint ? green('yes') : dim('no')));
 writeln('  Dependabot       '.($useDependabot ? green('yes') : dim('no')));
@@ -764,6 +950,21 @@ if (! $useUpdateChangelogWorkflow) {
 // Batch all composer.json modifications
 $removeDeps = [];
 $removeScripts = [];
+$scriptReplacements = [];
+$removeAllowPlugins = [];
+
+if (! $usePest) {
+    convertSkeletonTestsToPhpUnit();
+    $removeDeps = array_merge($removeDeps, [
+        'pestphp/pest',
+        'pestphp/pest-plugin-arch',
+        'pestphp/pest-plugin-laravel',
+    ]);
+    $scriptReplacements['test'] = 'vendor/bin/phpunit';
+    $scriptReplacements['test-coverage'] = 'vendor/bin/phpunit --coverage-text';
+    $removeAllowPlugins[] = 'pestphp/pest-plugin';
+    writeln(green('  ✓ Converted tests to PHPUnit (Pest disabled)'));
+}
 
 if (! $usePhpStan) {
     $removeDeps = array_merge($removeDeps, [
@@ -779,8 +980,8 @@ if (! $useLaravelRay) {
     $removeDeps[] = 'spatie/laravel-ray';
 }
 
-if (! empty($removeDeps) || ! empty($removeScripts)) {
-    modifyComposerJson($removeDeps, $removeScripts);
+if (! empty($removeDeps) || ! empty($removeScripts) || ! empty($scriptReplacements) || ! empty($removeAllowPlugins)) {
+    modifyComposerJson($removeDeps, $removeScripts, $scriptReplacements, $removeAllowPlugins);
     writeln(green('  ✓ Cleaned up composer.json'));
 }
 
@@ -794,4 +995,5 @@ writeln(green(bold('  Ready. Ship a Modulus-compatible inengine/{feature} module
 writeln(dim('  Remember: install ≠ enable; extend ModuleServiceProvider; fill the capability descriptor.'));
 writeln(dim('  Assets: put built CSS/JS in resources/dist (see resources/ASSETS.md); Modulus::publish() on install.'));
 writeln(dim('  Seed: Modulus::seed(..., confirmed: true) only — never on enable.'));
+writeln(dim('  Tests: Pest is the InEngine default (same as Modulus / Modulus Composer).'));
 writeln('');

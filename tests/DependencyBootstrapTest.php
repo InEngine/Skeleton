@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Coverage for {@see \VendorName\Skeleton\SkeletonServiceProvider} dependency config and dist asset publishing.
+ */
+
 use Illuminate\Support\Facades\File;
 use VendorName\Skeleton\SkeletonServiceProvider;
 

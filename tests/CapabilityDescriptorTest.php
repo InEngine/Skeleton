@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Unit coverage for {@see \VendorName\Skeleton\Capabilities\ModuleCapabilityDescriptor}.
+ */
+
 use VendorName\Skeleton\Capabilities\ModuleCapabilityDescriptor;
 
 it('exposes a static capability payload for inspect tooling', function () {
