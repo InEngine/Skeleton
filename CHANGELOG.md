@@ -4,6 +4,10 @@ All notable changes to `module-skeleton` will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- `resources/EXTENSIONS.md`: companion pattern using Modulus `ModuleExtensionGate` (macros / `resolveRelationUsing` without hub traits); pointer from `SkeletonServiceProvider`
+
 - Public GitHub template prep (not Packagist); README/TEMPLATE credit Spatie [package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)
 
 ### Step 9 alignment
