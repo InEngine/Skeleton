@@ -4,6 +4,7 @@ namespace VendorName\Skeleton;
 
 use Illuminate\Support\Facades\File;
 use InEngine\Modulus\ModuleServiceProvider;
+use InEngine\Modulus\Support\ModuleExtensionGate;
 use Spatie\LaravelPackageTools\Package;
 use VendorName\Skeleton\Commands\SkeletonCommand;
 use VendorName\Skeleton\Database\Seeders\ModuleSeeder;
@@ -72,7 +73,7 @@ class SkeletonServiceProvider extends ModuleServiceProvider
      * resources/DEPENDENCIES.md.
      *
      * To attach macros / resolveRelationUsing onto another module’s model,
-     * use {@see \InEngine\Modulus\Support\ModuleExtensionGate} — see
+     * use {@see ModuleExtensionGate} — see
      * resources/EXTENSIONS.md (do not add traits to the hub model).
      */
     public function activating(string $package): void
